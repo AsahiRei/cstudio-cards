@@ -29,13 +29,20 @@ C.Studios Cards is a custom card project featuring unique designs and scripted f
   "servers": []
 }
 ```
-## Adding strings.config (manually)
+## Adding strings (manually)
 directory: /ProjectIgnis/config/strings.config. Add this bellow:
+
+<details>
+  <summary>🛠️ Show Setcodes</summary>
+
+  ⚠️ **Note:** put this directly into `strings.config`
+
+  ```text
+  #CStudios Archetype
+  !setname 0x1182 DAL (Date A Live)
+  !setname 0x1183 Spirit-
 ```
-#CStudios Archetype
-!setname 0x1182 DAL (Date A Live)
-!setname 0x1183 Spirit-
-```
+</details>
 
 ## 👥 Contributors
 - **XyLeS** – Card design and creation  
