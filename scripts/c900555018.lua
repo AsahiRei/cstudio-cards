@@ -14,6 +14,7 @@ function s.initial_effect(c)
     --negate
     local e2=DateALive.SpellTrapSpiritEffectProc(c,{target=s.negtg,operation=s.negop,cost=true})
 	e2:SetCategory(CATEGORY_DISABLE)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetDescription(aux.Stringid(id,1))
 	c:RegisterEffect(e2)
 end
