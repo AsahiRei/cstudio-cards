@@ -1,1 +1,26 @@
-# cstudio-cards
+# C.Studios Cards
+
+Welcome to **C.Studios Cards**.
+
+This repository contains a collection of custom cards developed for use in compatible card-based systems or game frameworks.
+
+## 📌 Project Overview
+C.Studios Cards is a custom card project featuring unique designs and scripted functionality.  
+The project focuses on providing custom card content that can be used within supported platforms.
+
+## 👥 Contributors
+- **XyLeS** – Card design and creation  
+- **AsahiRei** – Scripting and implementation
+
+## 📂 Contents
+This repository may include:
+- Custom card definitions
+- Script files
+- Card assets
+- Supporting resources
+
+## ⚙️ Usage
+Clone or download the repository and follow the instructions required for your specific platform or system to use the cards.
+
+```bash
+git clone https://github.com/username/repository-name.git
