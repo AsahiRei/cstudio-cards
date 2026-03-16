@@ -2,11 +2,10 @@
 
 Welcome to **C.Studios Cards**.
 
-This repository contains a collection of custom cards developed for use in compatible card-based systems or game frameworks.
+This repository contains a collection of custom cards developed for use in compatible EDOPRO.
 
 ## 📌 Project Overview
-C.Studios Cards is a custom card project featuring unique designs and scripted functionality.  
-The project focuses on providing custom card content that can be used within supported platforms.
+C.Studios Cards is a custom card project featuring unique designs and scripted functionality.
 
 ## 👥 Contributors
 - **XyLeS** – Card design and creation  
