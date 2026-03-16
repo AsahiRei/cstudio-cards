@@ -1,0 +1,38 @@
+--DAL Spirit - Efreet
+--scripted by AsahiRei
+local s,id=GetID()
+function s.initial_effect(c)
+    --spirit effect
+    DateALive.SpiritEffectProcedure(c,id,{category=CATEGORY_DESTROY,target=s.destg,operation=s.desop})
+	--cannot be destroyed
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
+	e1:SetCountLimit(1)
+	e1:SetValue(s.valcon)
+	c:RegisterEffect(e1)
+end
+s.listed_series={SET_DAL,SET_SPIRIT}
+function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsControler(1-tp) and chkc:IsMonster() and chkc:IsFaceup() and chkc:IsLocation(LOCATION_MZONE) end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsMonster,tp,0,LOCATION_MZONE,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g=Duel.SelectTarget(tp,Card.IsMonster,tp,0,LOCATION_MZONE,1,1,nil)
+    Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,tp,0)
+end
+function s.desop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)>0 then
+		if DateALive.SearchLv3Check(e,tp) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,3))
+			DateALive.SearchLv3Operation(e,tp)
+        end
+	end
+end
+function s.valcon(e,re,r,rp)
+	return (r&REASON_BATTLE+REASON_EFFECT)~=0
+end
+Duel.LoadScript("cstudios-utility.lua")

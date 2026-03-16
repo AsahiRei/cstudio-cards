@@ -1,0 +1,155 @@
+--date a live archetype
+DateALive = {}
+
+SET_DAL=0x1182
+SET_SPIRIT=0x1183
+CODE_SPACEQUAKE=900555001
+--spirits
+CODE_PRINCESS=900555003
+CODE_EFREET=900555005
+CODE_HERMIT=900555007
+
+function DateALive.Lv3Procedure(c,id,codename)
+    --search
+    local e1=Effect.CreateEffect(c)
+    e1:SetDescription(aux.Stringid(id,0))
+	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e1:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_DELAY)
+	e1:SetCode(EVENT_SUMMON_SUCCESS)
+	e1:SetCountLimit(1,id)
+	e1:SetTarget(DateALive.SearchSpacequakeTarget)
+	e1:SetOperation(DateALive.SearchSpacequakeOperation)
+	c:RegisterEffect(e1)
+    local e2=e1:Clone()
+	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	c:RegisterEffect(e2)
+    --special summon
+    local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,1))
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetCode(EVENT_CHAINING)
+	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL+EFFECT_FLAG_DELAY)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCost(Cost.SelfTribute)
+    e3:SetCondition(DateALive.SpecialSummonSpiritCondition)
+	e3:SetTarget(DateALive.SpecialSummonSpiritTarget(codename))
+	e3:SetOperation(DateALive.SpecialSummonSpiritOperation(codename))
+	c:RegisterEffect(e3)
+end
+function DateALive.SearchSpacequakeFilter(c)
+	return c:IsCode(CODE_SPACEQUAKE) and c:IsAbleToHand()
+end
+function DateALive.SearchSpacequakeTarget(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(DateALive.SearchSpacequakeFilter,tp,LOCATION_DECK,0,1,nil) end
+    Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+end
+function DateALive.SearchSpacequakeOperation(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,DateALive.SearchSpacequakeFilter,tp,LOCATION_DECK,0,1,1,nil)
+	if #g>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
+	end
+end
+function DateALive.SpecialSummonSpiritCondition(e,tp,eg,ep,ev,re,r,rp)
+    return ep~=tp
+end
+function DateALive.SpecialSummonSpiritFilter(c,e,tp,code)
+	return c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function DateALive.SpecialSummonSpiritTarget(codename)
+    local code=codename
+    return function(e,tp,eg,ep,ev,re,r,rp,chk)
+        if chk==0 then
+            return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+                and Duel.IsExistingMatchingCard(DateALive.SpecialSummonSpiritFilter,tp,LOCATION_HAND|LOCATION_DECK,0,1,nil,e,tp,code)
+        end
+        Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
+        Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND|LOCATION_DECK)
+    end
+end
+function DateALive.SpecialSummonSpiritOperation(codename)
+    local code=codename
+    return function(e,tp,eg,ep,ev,re,r,rp)
+        if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then
+            return
+        end
+        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+        local g=Duel.SelectMatchingCard(tp,DateALive.SpecialSummonSpiritFilter,tp,LOCATION_HAND|LOCATION_DECK,0,1,1,nil,e,tp,code)
+        if #g>0 then
+		    Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+        end
+    end
+end
+function DateALive.IsCodenameSpirit(c,code)
+    return c.spirit_transformation_code==code
+end
+function DateALive.SpiritEffectProcedure(c,id,table)
+	--effect
+	local e1=Effect.CreateEffect(c)
+    e1:SetDescription(aux.Stringid(id,0))
+	if table.category then
+		e1:SetCategory(table.category)
+	end
+	if table.property then
+		e1:SetProperty(table.property)
+	end
+	e1:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetCondition(DateALive.SpiritEffectCondition)
+	e1:SetTarget(table.target)
+	e1:SetOperation(table.operation)
+	c:RegisterEffect(e1)
+	--special summon
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetCode(EVENT_DESTROYED)
+	e2:SetCondition(DateALive.SpecialSummonLv3Condition)
+	e2:SetTarget(DateALive.SpecialSummonLv3Target)
+	e2:SetOperation(DateALive.SpecialSummonLv3Operation)
+	c:RegisterEffect(e2)
+end
+function DateALive.SpiritEffectCondition(e,tp,eg,ep,ev,re,r,rp)
+    return re:GetHandler():IsSetCard(SET_DAL)
+end
+function DateALive.SearchLv3Filter(c)
+	return c:IsSetCard(SET_DAL) and c:IsLevel(3) and c:IsAbleToHand()
+end
+function DateALive.SearchLv3Check(e,tp)
+	return Duel.IsExistingMatchingCard(DateALive.SearchLv3Filter,tp,LOCATION_DECK,0,1,nil)
+end
+function DateALive.SearchLv3Operation(e,tp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,DateALive.SearchLv3Filter,tp,LOCATION_DECK,0,1,1,nil)
+	if #g>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
+	end
+end
+function DateALive.SpecialSummonLv3Condition(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsReason(REASON_EFFECT)
+end
+function DateALive.SpecialSummonLv3Filter(c,e,tp)
+	return c:IsSetCard(SET_DAL) and c:IsLevel(3) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function DateALive.SpecialSummonLv3Target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(DateALive.SpecialSummonLv3Filter,tp,LOCATION_HAND,0,1,nil,e,tp) end
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
+end
+function DateALive.SpecialSummonLv3Operation(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,DateALive.SpecialSummonLv3Filter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+	if #g>0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+	end
+end
