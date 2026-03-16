@@ -26,3 +26,24 @@ Clone or download the repository and follow the instructions required for your s
 
 ```bash
 git clone https://github.com/username/repository-name.git
+```
+## ⚙️ Importing cards
+```
+{
+  "repos": [
+    {
+      "url": "https://github.com/AsahiRei/cstudios-cards",
+      "repo_name": "cstudios-cards",
+      "repo_path": "./repositories/cstudios-cards",
+      "data_path": "expansions",
+      "script_path": "scripts",
+      "pics_path": "pics",
+	    "string_config": "string.config",
+      "should_update": true,
+      "should_read": true
+    }
+  ],
+  "urls": [],
+  "servers": []
+}
+```
