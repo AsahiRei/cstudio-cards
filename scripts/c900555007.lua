@@ -43,4 +43,3 @@ function s.econ(e)
 	local tp=e:GetHandlerPlayer()
 	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsSetCard,SET_DAL),tp,LOCATION_MZONE,0,2,nil)
 end
-Duel.LoadScript("cstudios-utility.lua")

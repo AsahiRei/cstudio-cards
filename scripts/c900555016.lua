@@ -7,5 +7,3 @@ function s.initial_effect(c)
 end
 s.listed_series={SET_DAL,CODE_NIGHTMARE}
 s.listed_names={CODE_SPACEQUAKE,CODE_NIGHTMARE}
-
-Duel.LoadScript("cstudios-utility.lua")

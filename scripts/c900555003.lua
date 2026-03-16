@@ -40,4 +40,3 @@ end
 function s.actcon(e)
 	return Duel.GetAttacker()==e:GetHandler()
 end
-Duel.LoadScript("cstudios-utility.lua")

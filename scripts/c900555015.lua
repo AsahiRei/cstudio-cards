@@ -72,4 +72,3 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local bc=c:GetBattleTarget()
 	return c:IsRelateToBattle() and bc:IsReason(REASON_BATTLE) and bc:IsMonster()
 end
-Duel.LoadScript("cstudios-utility.lua")

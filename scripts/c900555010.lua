@@ -14,18 +14,10 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 	--banish
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,1))
-	e1:SetCategory(CATEGORY_REMOVE)
-	e1:SetType(EFFECT_TYPE_QUICK_O)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetRange(LOCATION_GRAVE)
-	e1:SetHintTiming(0,TIMING_MAIN_END|TIMING_SUMMON|TIMING_SPSUMMON)
-	e1:SetCost(Cost.SelfBanish)
-	e1:SetCondition(aux.exccon)
-	e1:SetTarget(s.rmtg)
-	e1:SetOperation(s.rmop)
-	c:RegisterEffect(e1)
+	local e2=DateALive.SpellTrapSpiritEffectProc(c,{target=s.rmtg,operation=s.rmop,cost=true})
+	e2:SetCategory(CATEGORY_REMOVE)
+	e2:SetDescription(aux.Stringid(id,1))
+	c:RegisterEffect(e2)
 end
 s.listed_series={SET_SPIRIT,SET_DAL}
 function s.cfilter(c,tp)
@@ -74,4 +66,3 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 	end
 end
-Duel.LoadScript("cstudios-utility.lua")

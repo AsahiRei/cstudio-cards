@@ -68,4 +68,3 @@ function s.defop(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e1)
 	end
 end
-Duel.LoadScript("cstudios-utility.lua")

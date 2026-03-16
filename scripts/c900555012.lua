@@ -77,4 +77,3 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-Duel.LoadScript("cstudios-utility.lua")

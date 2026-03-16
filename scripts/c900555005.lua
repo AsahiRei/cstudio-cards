@@ -36,4 +36,3 @@ end
 function s.valcon(e,re,r,rp)
 	return (r&REASON_BATTLE+REASON_EFFECT)~=0
 end
-Duel.LoadScript("cstudios-utility.lua")
