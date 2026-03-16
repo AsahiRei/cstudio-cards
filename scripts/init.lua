@@ -173,17 +173,17 @@ function DateALive.SpecialSummonLv3Operation(spec_loc)
 		end
 	end
 end
-function DateALive.SpellTrapSpiritEffectProc(c,tables)
+function DateALive.SpellTrapSpiritEffectProc(c,table)
 	local eff=Effect.CreateEffect(c)
 	eff:SetType(EFFECT_TYPE_QUICK_O)
 	eff:SetCode(EVENT_FREE_CHAIN)
 	eff:SetRange(LOCATION_GRAVE)
 	eff:SetHintTiming(0,TIMING_MAIN_END|TIMING_SUMMON|TIMING_SPSUMMON)
-	if tables.cost==true then
+	if table.cost==true then
 		eff:SetCost(Cost.SelfBanish)
 	end
 	eff:SetCondition(aux.exccon)
-	eff:SetTarget(tables.target)
-	eff:SetOperation(tables.operation)
+	eff:SetTarget(table.target)
+	eff:SetOperation(table.operation)
 	return eff
 end
