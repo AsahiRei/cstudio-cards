@@ -46,3 +46,9 @@ git clone https://github.com/username/repository-name.git
   "servers": []
 }
 ```
+## Adding strings.config (manually)
+directory: /ProjectIgnis/config/strings.config. Add this bellow:
+```bash
+#CStudios Archetype
+!setname 0x1182 DAL (Date A Live)
+!setname 0x1183 Spirit-
