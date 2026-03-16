@@ -38,7 +38,6 @@ git clone https://github.com/username/repository-name.git
       "data_path": "expansions",
       "script_path": "scripts",
       "pics_path": "pics",
-	    "string_config": "string.config",
       "should_update": true,
       "should_read": true
     }
