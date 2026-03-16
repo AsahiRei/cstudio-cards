@@ -1,9 +1,9 @@
---DAL Spirit - Efreet
+--DAL Spirit - Hermit
 --scripted by AsahiRei
 local s,id=GetID()
 function s.initial_effect(c)
     --spirit effect
-    DateALive.SpiritEffectProcedure(c,id,{category=CATEGORY_DEFCHANGE,target=s.deftg,operation=s.defop})
+    DateALive.SpiritEffectProcedure(c,id,{category=CATEGORY_DEFCHANGE,target=s.deftg,operation=s.defop},false)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -14,6 +14,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 s.listed_series={SET_DAL,SET_SPIRIT}
+s.listed_names={900555006}
 function s.deftg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsFaceup() and chkc:IsAttackPos() and chkc:IsLocation(LOCATION_MZONE) end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsAttackPos,tp,0,LOCATION_MZONE,1,nil) end

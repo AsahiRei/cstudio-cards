@@ -8,6 +8,7 @@ CODE_SPACEQUAKE=900555001
 CODE_PRINCESS=900555003
 CODE_EFREET=900555005
 CODE_HERMIT=900555007
+CODE_NIGHTMARE=900555017
 
 function DateALive.Lv3Procedure(c,id,codename)
     --search
@@ -84,7 +85,7 @@ function DateALive.SpecialSummonSpiritOperation(codename)
         end
     end
 end
-function DateALive.SpiritEffectProcedure(c,id,table)
+function DateALive.SpiritEffectProcedure(c,id,table,spec_loc)
 	--effect
 	local e1=Effect.CreateEffect(c)
     e1:SetDescription(aux.Stringid(id,0))
@@ -109,12 +110,14 @@ function DateALive.SpiritEffectProcedure(c,id,table)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_DESTROYED)
 	e2:SetCondition(DateALive.SpecialSummonLv3Condition)
-	e2:SetTarget(DateALive.SpecialSummonLv3Target)
-	e2:SetOperation(DateALive.SpecialSummonLv3Operation)
+	e2:SetTarget(DateALive.SpecialSummonLv3Target(spec_loc))
+	e2:SetOperation(DateALive.SpecialSummonLv3Operation(spec_loc))
 	c:RegisterEffect(e2)
 end
 function DateALive.SpiritEffectCondition(e,tp,eg,ep,ev,re,r,rp)
-    return re:GetHandler():IsSetCard(SET_DAL)
+	if not re then return false end
+	local rc=re:GetHandler()
+    return rc and rc:IsSetCard(SET_DAL) and not rc:IsCode(CODE_NIGHTMARE)
 end
 function DateALive.SearchLv3Filter(c)
 	return c:IsSetCard(SET_DAL) and c:IsLevel(3) and c:IsAbleToHand()
@@ -136,17 +139,38 @@ end
 function DateALive.SpecialSummonLv3Filter(c,e,tp)
 	return c:IsSetCard(SET_DAL) and c:IsLevel(3) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function DateALive.SpecialSummonLv3Target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(DateALive.SpecialSummonLv3Filter,tp,LOCATION_HAND,0,1,nil,e,tp) end
-	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
+function DateALive.SpecialSummonLv3Target(spec_loc)
+	local check=spec_loc
+	local loc=LOCATION_HAND
+	if check==true then
+		loc=LOCATION_HAND+LOCATION_DECK
+	end
+	return function(e,tp,eg,ep,ev,re,r,rp,chk)
+		if chk==0 then
+			return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+				and Duel.IsExistingMatchingCard(DateALive.SpecialSummonLv3Filter,tp,loc,0,1,nil,e,tp)
+		end
+		--for origami
+		if e:GetHandler():IsCode(900555014) then
+			Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(900555014,2))
+		else
+			Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
+		end
+		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,loc)
+	end
 end
-function DateALive.SpecialSummonLv3Operation(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,DateALive.SpecialSummonLv3Filter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
-	if #g>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+function DateALive.SpecialSummonLv3Operation(spec_loc)
+	local check=spec_loc
+	local loc=LOCATION_HAND
+	if check==true then
+		loc=LOCATION_HAND+LOCATION_DECK
+	end
+	return function(e,tp,eg,ep,ev,re,r,rp)
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then return end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local g=Duel.SelectMatchingCard(tp,DateALive.SpecialSummonLv3Filter,tp,loc,0,1,1,nil,e,tp)
+		if #g>0 then
+			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+		end
 	end
 end

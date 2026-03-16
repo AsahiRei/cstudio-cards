@@ -3,7 +3,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
     --spirit effect
-    DateALive.SpiritEffectProcedure(c,id,{category=CATEGORY_DESTROY,target=s.destg,operation=s.desop})
+    DateALive.SpiritEffectProcedure(c,id,{category=CATEGORY_DESTROY,target=s.destg,operation=s.desop},false)
 	--cannot activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -16,6 +16,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 s.listed_series={SET_DAL,SET_SPIRIT}
+s.listed_names={900555002}
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsSpellTrap() and chkc:IsSpellTrap() end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsSpellTrap,tp,0,LOCATION_ONFIELD,1,nil) end
