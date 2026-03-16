@@ -21,7 +21,7 @@ C.Studios Cards is a custom card project featuring unique designs and scripted f
       "data_path": "expansions",
       "script_path": "scripts",
       "pics_path": "pics",
-      "should_update": true,
+      "should_update": false,
       "should_read": true
     }
   ],
