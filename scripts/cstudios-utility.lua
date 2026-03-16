@@ -84,9 +84,6 @@ function DateALive.SpecialSummonSpiritOperation(codename)
         end
     end
 end
-function DateALive.IsCodenameSpirit(c,code)
-    return c.spirit_transformation_code==code
-end
 function DateALive.SpiritEffectProcedure(c,id,table)
 	--effect
 	local e1=Effect.CreateEffect(c)
@@ -152,4 +149,14 @@ function DateALive.SpecialSummonLv3Operation(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
+end
+--spirits codename lists
+SpiritsCodenameLists={
+	[CODE_PRINCESS]=900555002,
+	[CODE_EFREET]=900555005,
+	[CODE_HERMIT]=900555007,
+}
+function DateALive.GetSpiritCodename(c,code)
+	local get_code=SpiritsCodenameLists[code]
+	return c:IsCode(get_code)
 end

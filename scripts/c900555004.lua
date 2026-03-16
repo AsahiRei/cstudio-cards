@@ -7,6 +7,4 @@ function s.initial_effect(c)
 end
 s.listed_series={SET_DAL,SET_SPIRIT}
 s.listed_names={CODE_SPACEQUAKE,CODE_EFREET}
-s.spirit_transformation_code=CODE_EFREET
-
 Duel.LoadScript("cstudios-utility.lua")

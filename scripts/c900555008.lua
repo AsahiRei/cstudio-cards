@@ -75,3 +75,4 @@ function s.exop(e,tp,eg,ep,ev,re,r,rp)
     e1:SetReset(RESETS_STANDARD_PHASE_END)
 	c:RegisterEffect(e1)
 end
+Duel.LoadScript("cstudios-utility.lua")
