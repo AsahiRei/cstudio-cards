@@ -1,4 +1,4 @@
---DAL - CR-unit - Origami
+--DAL - White Licorice - Origami
 --scripted by AsahiRei
 local s,id=GetID()
 function s.initial_effect(c)

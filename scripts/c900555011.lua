@@ -1,4 +1,4 @@
---DAL - Yatogami Tohka
+--DAL - Tobiichi Origami
 --scripted by AsahiRei
 local s,id=GetID()
 function s.initial_effect(c)
