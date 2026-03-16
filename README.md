@@ -30,7 +30,7 @@ C.Studios Cards is a custom card project featuring unique designs and scripted f
 }
 ```
 ## Adding strings (manually)
-directory: /ProjectIgnis/config/strings.config. Add this bellow:
+directory: /ProjectIgnis/config/strings.config.
 
 <details>
   <summary>🛠️ Show Setcodes</summary>
