@@ -1,3 +1,6 @@
+<img src="background.jpg" width="100%">
+
+
 # C.Studios Cards
 
 Welcome to **C.Studios Cards**.
