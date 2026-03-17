@@ -4,6 +4,7 @@ local s,id=GetID()
 function s.initial_effect(c)
     --activate
     local e1=Effect.CreateEffect(c)
+    e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_DESTROYED)
@@ -16,7 +17,7 @@ function s.initial_effect(c)
     local e2=DateALive.SpellTrapSpiritEffectProc(c,{target=s.sptg,operation=s.spop,cost=true})
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_REMOVE)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetDescription(aux.Stringid(id,2))
+	e2:SetDescription(aux.Stringid(id,1))
 	c:RegisterEffect(e2)
 end
 s.listed_series={SET_DAL,SET_SPIRIT}
@@ -107,6 +108,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)>0 then
         local code=tc:GetCode()
+        Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,2))
         local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_HAND|LOCATION_DECK,0,nil,e,tp,code)
         if #g>0 then
             Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
