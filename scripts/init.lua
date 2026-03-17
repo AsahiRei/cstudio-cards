@@ -9,6 +9,9 @@ CODE_EFREET=900555005
 CODE_HERMIT=900555007
 CODE_NIGHTMARE=900555017
 
+--manual handling
+EFFECT_OF_SPIRIT_COMRADE=900555026
+
 function DateALive.Lv3Procedure(c,id,codename)
     --search
     local e1=Effect.CreateEffect(c)
@@ -186,4 +189,23 @@ function DateALive.SpellTrapSpiritEffectProc(c,table)
 	eff:SetTarget(table.target)
 	eff:SetOperation(table.operation)
 	return eff
+end
+function DateALive.AffectedByEffectOfSpiritComrade(c)
+	--cannot be destroyed
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
+	e1:SetCountLimit(1)
+	e1:SetCondition(DateALive.IndesCondition)
+	e1:SetValue(DateALive.IndesValue)
+	c:RegisterEffect(e1)
+end
+function DateALive.IndesCondition(e,tp,eg,ep,ev,re,r,rp)
+    local p=e:GetHandlerPlayer()
+    return Duel.IsPlayerAffectedByEffect(p,EFFECT_OF_SPIRIT_COMRADE)
+end
+function DateALive.IndesValue(e,re,r,rp)
+	return (r&REASON_BATTLE)~=0
 end

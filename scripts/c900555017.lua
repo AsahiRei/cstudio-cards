@@ -4,6 +4,7 @@ local s,id=GetID()
 function s.initial_effect(c)
     --spirit effect
     DateALive.SpiritEffectProcedure(c,id,{category=CATEGORY_SPECIAL_SUMMON,target=s.sptg,operation=s.spop},false)
+	DateALive.AffectedByEffectOfSpiritComrade(c)
     local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,1))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
