@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
-s.listed_series={SET_DAL}
+s.listed_series={SET_SPIRIT}
 function s.cfilter(c)
 	return c:IsSetCard(SET_SPIRIT) and c:IsFaceup()
 end

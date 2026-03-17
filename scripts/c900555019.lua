@@ -20,7 +20,7 @@ function s.initial_effect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	c:RegisterEffect(e2)
 end
-s.listed_series={SET_DAL,SET_SPIRIT}
+s.listed_series={SET_DAL}
 function s.cfilter(c,e,tp)
     return c:IsPreviousLocation(LOCATION_MZONE) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
         and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND|LOCATION_DECK|LOCATION_GRAVE,0,1,nil,e,tp,c:GetCode())

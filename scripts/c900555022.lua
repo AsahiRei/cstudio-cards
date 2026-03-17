@@ -77,6 +77,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
     local tg=g:Select(tp,1,1,nil):GetFirst()
     if Duel.SpecialSummonStep(tg,0,tp,tp,false,false,POS_FACEUP) then
         if tg:IsSetCard(SET_SPIRIT) then
+            Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,0))
             local e1=Effect.CreateEffect(c)
             e1:SetType(EFFECT_TYPE_SINGLE)
             e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -84,10 +85,12 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
             e1:SetReset(RESETS_STANDARD_PHASE_END)
             tg:RegisterEffect(e1)
         elseif tg:IsType(TYPE_XYZ) then
+            Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,1))
             c:CancelToGrave()
             Duel.Overlay(tg,c)
         elseif tg:IsLevel(3) then
-            Duel.Recover(tp,500,REASON_EFFECT)
+            Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,2))
+            Duel.Recover(tp,700,REASON_EFFECT)
         end
         Duel.SpecialSummonComplete()
     end
