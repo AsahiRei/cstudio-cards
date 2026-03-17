@@ -1,4 +1,4 @@
---DAL - Zadkiel - Freezing puppet
+--DAL - Licorice Assault
 --scripted by AsahiRei
 local s,id=GetID()
 function s.initial_effect(c)

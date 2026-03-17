@@ -1,4 +1,4 @@
---DAL - Zadkiel - Freezing puppet
+--DAL - Spirit Comrade
 --scripted by AsahiRei
 local s,id=GetID()
 function s.initial_effect(c)
@@ -22,7 +22,7 @@ function s.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetCode(EFFECT_UPDATE_ATTACK)
 	e3:SetRange(LOCATION_SZONE)
-	e3:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e3:SetTargetRange(LOCATION_MZONE,0)
 	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,SET_SPIRIT))
 	e3:SetValue(500)
 	c:RegisterEffect(e3)

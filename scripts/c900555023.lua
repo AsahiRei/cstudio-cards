@@ -1,4 +1,4 @@
---DAL - Zadkiel - Freezing puppet
+--DAL - Camael - Bright Burning Annihilating Demon
 --scripted by AsahiRei
 local s,id=GetID()
 function s.initial_effect(c)
