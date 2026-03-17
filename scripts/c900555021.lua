@@ -19,7 +19,7 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.cfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
-		and Duel.IsExistingMatchingCard(aux.FaceupFilter(aux.TRUE),tp,0,LOCATION_MZONE,1,nil,e,tp) end
+		and Duel.IsExistingMatchingCard(aux.FaceupFilter(aux.TRUE),tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	Duel.SelectTarget(tp,s.cfilter,tp,LOCATION_MZONE,0,1,1,nil,tp)
@@ -31,7 +31,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsRelateToEffect(e) then
 		local atk=tc:GetAttack()
 		local def=tc:GetDefense()
-		local g=Duel.GetMatchingGroup(aux.FaceupFilter(aux.TRUE),tp,0,LOCATION_MZONE,nil,e,tp)
+		local g=Duel.GetMatchingGroup(aux.FaceupFilter(aux.TRUE),tp,0,LOCATION_MZONE,nil)
 		for sc in aux.Next(g) do
 			if not sc:IsImmuneToEffect(e) then
 				local old_atk=sc:GetAttack()
