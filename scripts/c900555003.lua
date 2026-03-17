@@ -4,6 +4,7 @@ local s,id=GetID()
 function s.initial_effect(c)
     --spirit effect
     DateALive.SpiritEffectProcedure(c,id,{category=CATEGORY_DESTROY,target=s.destg,operation=s.desop},false)
+	DateALive.AffectedByEffectOfSpiritComrade(c)
 	--cannot activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)

@@ -4,6 +4,7 @@ local s,id=GetID()
 function s.initial_effect(c)
     --spirit effect
     DateALive.SpiritEffectProcedure(c,id,{category=CATEGORY_DEFCHANGE,target=s.deftg,operation=s.defop},false)
+	DateALive.AffectedByEffectOfSpiritComrade(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
