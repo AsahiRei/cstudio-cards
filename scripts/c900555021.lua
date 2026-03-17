@@ -56,6 +56,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 		if flag then
 			--gains effect
+			Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,1))
 			local e1=Effect.CreateEffect(c)
 			e1:SetDescription(aux.Stringid(id,2))
 			e1:SetCategory(CATEGORY_ATKCHANGE)
