@@ -53,7 +53,7 @@ function s.cfilter(c)
 	return c:IsSetCard(SET_DAL) and c:IsFaceup() and c:IsAbleToDeck()
 end
 function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_MZONE,0,1,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_HAND,0,1,nil)
         and Duel.IsPlayerCanDraw(tp) end
     Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
     Duel.SetTargetPlayer(tp)
@@ -62,7 +62,8 @@ function s.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
     Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,0,tp,1)
 end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
-    local g=Duel.SelectMatchingCard(tp,s.cfilter2,tp,LOCATION_MZONE,0,1,1,nil)
+    local g=Duel.SelectMatchingCard(tp,s.cfilter2,tp,LOCATION_HAND,0,1,1,nil)
+	Duel.ConfirmCards(tp,g)
 	if #g>0 and Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT) then
         local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	    Duel.Draw(p,d,REASON_EFFECT)

@@ -1,4 +1,4 @@
---DAL - Gabriel Army-Breaking Songstress
+--DAL - Pool Party
 --scripted by AsahiRei
 local s,id=GetID()
 function s.initial_effect(c)
