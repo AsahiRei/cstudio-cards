@@ -15,14 +15,15 @@ C.Studios Cards is a custom card project featuring unique designs and scripted f
 {
   "repos": [
     {
-      "url": "https://github.com/AsahiRei/cstudios-cards",
+      "url": "https://github.com/AsahiRei/cstudios-cards.git",
       "repo_name": "cstudios-cards",
       "repo_path": "./repositories/cstudios-cards",
       "data_path": "expansions",
       "script_path": "scripts",
       "pics_path": "pics",
       "should_update": true,
-      "should_read": true
+      "should_read": true,
+      "has_core": false,
     }
   ],
   "urls": [],
