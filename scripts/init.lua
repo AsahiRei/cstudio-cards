@@ -13,6 +13,7 @@ CODE_DIVA=900555029
 CODE_BERSERK=900555034
 CODE_WITCH=900555037
 CODE_RULER=900555039
+CODE_ANGEL=900555014
 --manual handling
 EFFECT_OF_SPIRIT_COMRADE=900555026
 
@@ -120,7 +121,7 @@ function DateALive.SpiritEffectProcedure(c,id,table,spec_loc)
 	e2:SetOperation(DateALive.SpecialSummonLv3Operation(spec_loc))
 	c:RegisterEffect(e2)
 end
-DateALive.ExceptionList={900555035,CODE_NIGHTMARE,CODE_RULER}
+DateALive.ExceptionList={900555035,900555044,CODE_NIGHTMARE,CODE_RULER}
 function DateALive.ExceptionBaseFilter(c)
     for _,code in ipairs(DateALive.ExceptionList) do
         if c:IsCode(code) then return false end
@@ -250,6 +251,16 @@ function DateALive.InverseSpiritProcedure(c,code,id,table)
 	e2:SetTarget(table.target)
 	e2:SetOperation(table.operation)
 	c:RegisterEffect(e2)
+	--destroy replace
+    local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_DESTROY_REPLACE)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetRange(LOCATION_MZONE)
+    e2:SetCountLimit(1)
+	e2:SetTarget(DateALive.InverseSpiritReplaceTarget)
+	e2:SetOperation(DateALive.InverseSpiritReplaceOperation)
+	c:RegisterEffect(e2)
 end
 function DateALive.InverseSpiritFilter(c,code)
 	return c:IsCode(code) and c:IsFaceup() and c:IsAbleToRemoveAsCost()
@@ -279,4 +290,27 @@ function DateALive.InverseSpiritOperation(e,tp,eg,ep,ev,re,r,rp,c)
 	if not g then return end
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 	g:DeleteGroup()
+end
+function DateALive.InverseSpiritReplaceFilter(c,e)
+	return c:IsFaceup() and c:IsSetCard(SET_DAL) and c:IsDestructable(e)
+end
+function DateALive.InverseSpiritReplaceTarget(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return not c:IsReason(REASON_REPLACE) and c:IsOnField() and c:IsFaceup()
+		and Duel.IsExistingMatchingCard(DateALive.InverseSpiritReplaceFilter,tp,LOCATION_MZONE,0,1,c,e) end
+	if Duel.SelectEffectYesNo(tp,c,96) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESREPLACE)
+		local g=Duel.SelectMatchingCard(tp,DateALive.InverseSpiritReplaceFilter,tp,LOCATION_MZONE,0,1,1,c,e)
+		e:SetLabelObject(g:GetFirst())
+		g:GetFirst():SetStatus(STATUS_DESTROY_CONFIRMED,true)
+		return true
+	else return false end
+end
+function DateALive.InverseSpiritReplaceOperation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=e:GetLabelObject()
+	if not tc then return end
+	if tc:IsStatus(STATUS_DESTROY_CONFIRMED) then
+		Duel.Destroy(tc,REASON_EFFECT+REASON_REPLACE)
+	end
 end
