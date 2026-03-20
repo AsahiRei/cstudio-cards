@@ -69,5 +69,6 @@ function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFlagEffect(tp,id)>0 and Duel.GetTurnPlayer()==tp
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	Duel.SendtoDeck(e:GetHandler(),tp,SEQ_DECKSHUFFLE,REASON_EFFECT)
 end
