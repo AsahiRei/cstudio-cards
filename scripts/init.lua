@@ -12,7 +12,7 @@ CODE_NIGHTMARE=900555017
 CODE_DIVA=900555029
 CODE_BERSERK=900555034
 CODE_WITCH=900555037
-
+CODE_RULER=900555039
 --manual handling
 EFFECT_OF_SPIRIT_COMRADE=900555026
 
@@ -120,10 +120,17 @@ function DateALive.SpiritEffectProcedure(c,id,table,spec_loc)
 	e2:SetOperation(DateALive.SpecialSummonLv3Operation(spec_loc))
 	c:RegisterEffect(e2)
 end
+DateALive.ExceptionList={900555035,CODE_NIGHTMARE,CODE_RULER}
+function DateALive.ExceptionBaseFilter(c)
+    for _,code in ipairs(DateALive.ExceptionList) do
+        if c:IsCode(code) then return false end
+    end
+    return true
+end
 function DateALive.SpiritEffectCondition(e,tp,eg,ep,ev,re,r,rp)
 	if not re then return false end
 	local rc=re:GetHandler()
-    return rc and rc:IsSetCard(SET_DAL) and not (rc:IsCode(CODE_NIGHTMARE) or rc:IsCode(900555035))
+    return rc and rc:IsSetCard(SET_DAL) and DateALive.ExceptionBaseFilter(rc)
 end
 function DateALive.SearchLv3Filter(c)
 	return c:IsSetCard(SET_DAL) and c:IsLevel(3) and c:IsAbleToHand()
@@ -216,7 +223,7 @@ end
 function DateALive.IndesValue(e,re,r,rp)
 	return (r&REASON_BATTLE)~=0
 end
-function DateALive.InverseSpiritProcedure(c,code)
+function DateALive.InverseSpiritProcedure(c,code,id,table)
 	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -227,6 +234,22 @@ function DateALive.InverseSpiritProcedure(c,code)
 	e1:SetTarget(DateALive.InverseSpiritTarget(code))
 	e1:SetOperation(DateALive.InverseSpiritOperation)
 	c:RegisterEffect(e1)
+	--effect
+	local e2=Effect.CreateEffect(c)
+    e2:SetDescription(aux.Stringid(id,0))
+	if table.category then
+		e2:SetCategory(table.category)
+	end
+	if table.property then
+		e2:SetProperty(table.property)
+	end
+	e2:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e2:SetCondition(DateALive.SpiritEffectCondition)
+	e2:SetTarget(table.target)
+	e2:SetOperation(table.operation)
+	c:RegisterEffect(e2)
 end
 function DateALive.InverseSpiritFilter(c,code)
 	return c:IsCode(code) and c:IsFaceup() and c:IsAbleToRemoveAsCost()

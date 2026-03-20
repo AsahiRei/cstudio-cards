@@ -5,6 +5,15 @@ function s.initial_effect(c)
     --spirit effect
     DateALive.SpiritEffectProcedure(c,id,{category=CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE,target=s.statstg,operation=s.statsop},false)
 	DateALive.AffectedByEffectOfSpiritComrade(c)
+	--negate attack
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,4))
+	e1:SetType(EFFECT_TYPE_QUICK_O)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e1:SetCountLimit(1)
+	e1:SetOperation(s.negop)
+	c:RegisterEffect(e1)
 end
 s.listed_series={SET_DAL,SET_SPIRIT}
 s.listed_names={900555036}
@@ -31,5 +40,15 @@ function s.statsop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetValue(tc:GetBaseDefense())
 		e2:SetReset(RESET_EVENT|RESETS_STANDARD_DISABLE)
 		c:RegisterEffect(e2)
+		if DateALive.SearchLv3Check(e,tp) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,3))
+			DateALive.SearchLv3Operation(e,tp)
+        end
+	end
+end
+function s.negop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_OPSELECTED,tp,e:GetDescription())
+	if Duel.NegateAttack() then
+		Duel.Damage(1-tp,Duel.GetAttacker():GetAttack(),REASON_EFFECT)
 	end
 end
