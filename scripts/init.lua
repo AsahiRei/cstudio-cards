@@ -10,6 +10,7 @@ CODE_HERMIT=900555007
 CODE_NIGHTMARE=900555017
 CODE_DIVA=900555029
 CODE_BERSERK=900555034
+CODE_WITCH=900555037
 
 --manual handling
 EFFECT_OF_SPIRIT_COMRADE=900555026
@@ -157,6 +158,9 @@ function DateALive.SpecialSummonLv3Target(spec_loc)
 		--for origami
 		if e:GetHandler():IsCode(900555014) then
 			Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(900555014,2))
+		--for date alive
+		elseif e:GetHandler():IsCode(900555032) then
+			Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(900555032,0))
 		else
 			Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 		end
