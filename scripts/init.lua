@@ -121,7 +121,7 @@ function DateALive.SpiritEffectProcedure(c,id,table,spec_loc)
 	e2:SetOperation(DateALive.SpecialSummonLv3Operation(spec_loc))
 	c:RegisterEffect(e2)
 end
-DateALive.ExceptionList={900555035,CODE_NIGHTMARE,CODE_RULER}
+DateALive.ExceptionList={900555035,900555044,CODE_NIGHTMARE,CODE_RULER}
 function DateALive.ExceptionBaseFilter(c)
     for _,code in ipairs(DateALive.ExceptionList) do
         if c:IsCode(code) then return false end
