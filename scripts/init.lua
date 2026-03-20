@@ -2,6 +2,7 @@
 if not DateALive then DateALive = {} end
 SET_DAL=0x1182
 SET_SPIRIT=0x1183
+SET_INVERSESPIRIT=0x1184
 CODE_SPACEQUAKE=900555001
 --spirits
 CODE_PRINCESS=900555003
@@ -122,7 +123,7 @@ end
 function DateALive.SpiritEffectCondition(e,tp,eg,ep,ev,re,r,rp)
 	if not re then return false end
 	local rc=re:GetHandler()
-    return rc and rc:IsSetCard(SET_DAL) and not rc:IsCode(CODE_NIGHTMARE)
+    return rc and rc:IsSetCard(SET_DAL) and not (rc:IsCode(CODE_NIGHTMARE) or rc:IsCode(900555035))
 end
 function DateALive.SearchLv3Filter(c)
 	return c:IsSetCard(SET_DAL) and c:IsLevel(3) and c:IsAbleToHand()
@@ -214,4 +215,45 @@ function DateALive.IndesCondition(e,tp,eg,ep,ev,re,r,rp)
 end
 function DateALive.IndesValue(e,re,r,rp)
 	return (r&REASON_BATTLE)~=0
+end
+function DateALive.InverseSpiritProcedure(c,code)
+	--special summon
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_SPSUMMON_PROC)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(LOCATION_HAND)
+	e1:SetCondition(DateALive.InverseSpiritCondition(code))
+	e1:SetTarget(DateALive.InverseSpiritTarget(code))
+	e1:SetOperation(DateALive.InverseSpiritOperation)
+	c:RegisterEffect(e1)
+end
+function DateALive.InverseSpiritFilter(c,code)
+	return c:IsCode(code) and c:IsFaceup() and c:IsAbleToRemoveAsCost()
+end
+function DateALive.InverseSpiritCondition(code)
+	return function(e,c)
+		if c==nil then return true end
+		if Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)<=0 then return false end
+		return Duel.GetMatchingGroupCount(DateALive.InverseSpiritFilter,c:GetControler(),LOCATION_MZONE,0,nil,code)>0
+	end
+end
+function DateALive.InverseSpiritTarget(code)
+	return function(e,tp,eg,ep,ev,re,r,rp,chk)
+		local g=Duel.GetMatchingGroup(DateALive.InverseSpiritFilter,tp,LOCATION_MZONE,0,nil,code)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local rg=g:Select(tp,1,1,nil)
+		if #rg==1 then
+			rg:KeepAlive()
+			e:SetLabelObject(rg)
+			return true
+		end
+		return false
+	end
+end
+function DateALive.InverseSpiritOperation(e,tp,eg,ep,ev,re,r,rp,c)
+	local g=e:GetLabelObject()
+	if not g then return end
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
+	g:DeleteGroup()
 end
