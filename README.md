@@ -42,6 +42,7 @@ directory: /ProjectIgnis/config/strings.config.
   #CStudios Archetype
   !setname 0x1182 DAL (Date A Live)
   !setname 0x1183 Spirit-
+  !setname 0x1184 Inverse Spirit-
 ```
 </details>
 
