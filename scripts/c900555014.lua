@@ -21,7 +21,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 s.listed_series={SET_DAL,SET_SPIRIT}
-s.listed_names={900555012}
+s.listed_names={900555011}
 function s.spfilter(c,e,tp)
 	return c:IsSetCard(SET_SPIRIT) and not c:IsCode(id) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
