@@ -64,7 +64,13 @@ end
 function s.drop(e,tp,eg,ep,ev,re,r,rp)
     local g=Duel.SelectMatchingCard(tp,s.cfilter2,tp,LOCATION_HAND,0,1,1,nil)
 	Duel.ConfirmCards(tp,g)
-	if #g>0 and Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT) then
+	if #g==0 then return end
+	local next=false
+	if Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)>0 then
+		Duel.ShuffleDeck(tp)
+        next=true
+	end
+	if next then
         local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	    Duel.Draw(p,d,REASON_EFFECT)
 	end
