@@ -1,4 +1,4 @@
---DAL - Vanargandr - Mana
+--DAL - Spirits' Guard
 --scripted by AsahiRei
 local s,id=GetID()
 function s.initial_effect(c)
@@ -16,19 +16,8 @@ function s.initial_effect(c)
 	e2:SetCode(EFFECT_TRAP_ACT_IN_HAND)
 	e2:SetCondition(s.handcon)
 	c:RegisterEffect(e2)
-	--shuffle
-	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetCategory(CATEGORY_TODECK)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e3:SetRange(LOCATION_GRAVE)
-	e3:SetCode(EVENT_PHASE|PHASE_STANDBY)
-	e3:SetCountLimit(1)
-	e3:SetCondition(s.tdcon)
-	e3:SetOperation(s.tdop)
-	c:RegisterEffect(e3)
 end
-s.listed_series={SET_SPIRIT}
+s.listed_series={SET_SPIRIT,SET_DAL}
 function s.rmfilter(c)
 	return c:IsAbleToRemoveAsCost() and c:IsCode(900555009)
 end
@@ -37,6 +26,16 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,s.rmfilter,tp,LOCATION_MZONE|LOCATION_GRAVE|LOCATION_DECK,0,1,1,nil)
+	--shuffle
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetDescription(aux.Stringid(id,1))
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_PHASE|PHASE_STANDBY)
+	e1:SetCountLimit(1)
+	e1:SetLabelObject(g)
+	e1:SetCondition(s.tdcon)
+	e1:SetOperation(s.tdop)
+	Duel.RegisterEffect(e1,tp)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function s.handcon(e)
@@ -69,6 +68,7 @@ function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFlagEffect(tp,id)>0 and Duel.GetTurnPlayer()==tp
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
+	local g=e:GetLabelObject()
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
-	Duel.SendtoDeck(e:GetHandler(),tp,SEQ_DECKSHUFFLE,REASON_EFFECT)
+	Duel.SendtoDeck(g,tp,SEQ_DECKSHUFFLE,REASON_EFFECT)
 end
