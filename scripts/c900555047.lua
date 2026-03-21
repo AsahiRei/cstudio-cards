@@ -84,6 +84,10 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
         end
         Duel.ShuffleDeck(tp)
 	end
+	if DateALive.SearchLv3Check(e,tp) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+		Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(id,3))
+		DateALive.SearchLv3Operation(e,tp)
+    end
 end
 function s.efilter(e,te)
 	return te:IsSpellEffect() and te:GetOwnerPlayer()~=e:GetHandlerPlayer()
