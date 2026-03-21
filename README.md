@@ -43,6 +43,7 @@ directory: /ProjectIgnis/config/strings.config.
   !setname 0x1182 DAL (Date A Live)
   !setname 0x1183 Spirit-
   !setname 0x1184 Inverse Spirit-
+  !setname 0x1185 Irregular Spirit-
 ```
 </details>
 
