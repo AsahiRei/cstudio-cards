@@ -33,7 +33,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 s.listed_series={SET_DAL,SET_SPIRIT}
-s.listed_names={900555002}
+s.listed_names={900555038}
 function s.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(SET_SPIRIT) and not c:IsCode(id) and c:IsMonster()
 end
