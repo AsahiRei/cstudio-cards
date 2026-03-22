@@ -248,6 +248,7 @@ end
 function DateALive.IndesCondition(e,tp,eg,ep,ev,re,r,rp)
     local p=e:GetHandlerPlayer()
     return Duel.IsPlayerAffectedByEffect(p,EFFECT_OF_SPIRIT_COMRADE)
+		and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsSetCard,SET_SPIRIT),p,LOCATION_MZONE,0,2,nil)
 end
 function DateALive.IndesValue(e,re,r,rp)
 	return (r&REASON_BATTLE)~=0
