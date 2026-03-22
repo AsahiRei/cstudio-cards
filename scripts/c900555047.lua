@@ -70,8 +70,9 @@ end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
-        Duel.ConfirmDecktop(tp,5)
+		Duel.ConfirmDecktop(tp,5)
         local g=Duel.GetDecktopGroup(tp,5)
+		Duel.ConfirmCards(tp,g)
         local sg=g:Filter(s.dfilter,nil)
         local ct=#sg
         if ct>0 then
