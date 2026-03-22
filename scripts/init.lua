@@ -18,6 +18,7 @@ CODE_ANGEL=900555014
 CODE_IRREGULAR_AI=900555047
 CODE_IRREGULAR_VIRUS=900555049
 CODE_SISTER=900555051
+CODE_JUDGEMENT=900555055
 --manual handling
 EFFECT_OF_SPIRIT_COMRADE=900555026
 
@@ -75,22 +76,36 @@ end
 function DateALive.SpecialSummonSpiritTarget(codename)
     local code=codename
     return function(e,tp,eg,ep,ev,re,r,rp,chk)
+		local loc=LOCATION_HAND|LOCATION_DECK
+		--mayuri
+		if e:GetHandler():IsCode(900555056) then
+			loc=LOCATION_EXTRA
+		else
+			loc=LOCATION_HAND|LOCATION_DECK
+		end
         if chk==0 then
             return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-                and Duel.IsExistingMatchingCard(DateALive.SpecialSummonSpiritFilter,tp,LOCATION_HAND|LOCATION_DECK,0,1,nil,e,tp,code)
+                and Duel.IsExistingMatchingCard(DateALive.SpecialSummonSpiritFilter,tp,loc,0,1,nil,e,tp,code)
         end
         Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
-        Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND|LOCATION_DECK)
+        Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,loc)
     end
 end
 function DateALive.SpecialSummonSpiritOperation(codename)
     local code=codename
     return function(e,tp,eg,ep,ev,re,r,rp)
+		local loc=LOCATION_HAND|LOCATION_DECK
+		--mayuri
+		if e:GetHandler():IsCode(900555056) then
+			loc=LOCATION_EXTRA
+		else
+			loc=LOCATION_HAND|LOCATION_DECK
+		end
         if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then
             return
         end
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-        local g=Duel.SelectMatchingCard(tp,DateALive.SpecialSummonSpiritFilter,tp,LOCATION_HAND|LOCATION_DECK,0,1,1,nil,e,tp,code)
+        local g=Duel.SelectMatchingCard(tp,DateALive.SpecialSummonSpiritFilter,tp,loc,0,1,1,nil,e,tp,code)
         if #g>0 then
 		    Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
         end
@@ -105,14 +120,23 @@ function DateALive.SpiritEffectProcedure(c,id,table,spec_loc)
 	end
 	if table.property then
 		e1:SetProperty(table.property)
+	else
+		e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	end
 	e1:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	if table.rio_sonogami==true then
+		e1:SetCountLimit(1,id)
+	end
 	e1:SetCondition(DateALive.SpiritEffectCondition)
 	e1:SetTarget(table.target)
 	e1:SetOperation(table.operation)
 	c:RegisterEffect(e1)
+	if table.mayuri_judgment==true then
+		local exf=e1:Clone()
+		exf:SetCondition(function(e) return e:GetHandler():IsLinkSummoned() end)
+		c:RegisterEffect(exf)
+	end
 	--special summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
@@ -125,7 +149,7 @@ function DateALive.SpiritEffectProcedure(c,id,table,spec_loc)
 	e2:SetOperation(DateALive.SpecialSummonLv3Operation(spec_loc))
 	c:RegisterEffect(e2)
 end
-DateALive.ExceptionList={900555035,900555044,CODE_NIGHTMARE,CODE_RULER}
+DateALive.ExceptionList={900555035,900555044,900555059,CODE_NIGHTMARE,CODE_RULER,CODE_JUDGEMENT}
 function DateALive.ExceptionBaseFilter(c)
     for _,code in ipairs(DateALive.ExceptionList) do
         if c:IsCode(code) then return false end
