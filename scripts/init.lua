@@ -343,3 +343,110 @@ function DateALive.InverseSpiritReplaceOperation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Destroy(tc,REASON_EFFECT+REASON_REPLACE)
 	end
 end
+
+if not OTNN then OTNN = {} end
+
+function OTNN.XyzProcedure(c,id,extraeff)
+	--xyz summon
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_SPSUMMON_PROC)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e1:SetRange(LOCATION_EXTRA)
+	e1:SetCondition(OTNN.XyzCondition)
+	e1:SetTarget(OTNN.XyzTarget)
+	e1:SetOperation(OTNN.XyzOperation)
+	e1:SetValue(SUMMON_TYPE_XYZ)
+	--rank up
+    local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_UPDATE_RANK)
+	e2:SetValue(OTNN.RankValue)
+	c:RegisterEffect(e2)
+	--battle gain atk
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(id,0))
+	e3:SetCategory(CATEGORY_ATKCHANGE)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetCode(EVENT_BATTLE_CONFIRM)
+	e3:SetOperation(OTNN.BattleGainAtkOperation)
+	c:RegisterEffect(e3)
+	--attach
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,1))
+	e4:SetCode(EVENT_BATTLE_DESTROYING)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetCondition(OTNN.AttachCondition)
+	e4:SetOperation(OTNN.AttachOperation(extraeff))
+	c:RegisterEffect(e4)
+	return e1
+end
+function OTNN.XyzFilter1(c,tp)
+	return c:IsFaceup() and c:IsRace(RACE_WARRIOR) and Duel.IsExistingMatchingCard(OTNN.XyzFilter2,tp,LOCATION_MZONE,0,1,c,tp,c:GetLevel())
+end
+function OTNN.XyzFilter2(c,tp,lv)
+	return c:IsFaceup() and c:IsRace(RACE_WARRIOR) and c:IsLevel(lv) and Duel.GetLocationCountFromEx(tp,tp,nil,nil)>0
+end
+function OTNN.XyzCondition(e,c)
+	if c==nil then return true end
+	local tp=c:GetControler()
+	local mg=Duel.GetMatchingGroup(OTNN.XyzFilter1,tp,LOCATION_MZONE,0,nil,tp)
+	local ct=#mg
+	return ct>=2
+end
+function OTNN.XyzTarget(e,tp,eg,ep,ev,re,r,rp,c)
+	local c=e:GetHandler()
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,0,nil)
+	local g1=g:Filter(OTNN.XyzFilter1,nil,tp)
+	local mg1=aux.SelectUnselectGroup(g1,e,tp,1,1,nil,1,tp,HINTMSG_XMATERIAL,nil,nil,true)
+	if #mg1>0 then
+		local mc=mg1:GetFirst()
+		local g2=g:Filter(OTNN.XyzFilter2,mc,tp,mc:GetLevel())
+		local mg2=aux.SelectUnselectGroup(g2,e,tp,1,#g2,nil,1,tp,HINTMSG_XMATERIAL,nil,nil,true)
+		mg1:Merge(mg2)
+	end
+	if #mg1>=2 then
+		mg1:KeepAlive()
+		e:SetLabelObject(mg1)
+		return true
+	end
+	return false
+end
+function OTNN.XyzOperation(e,tp,eg,ep,ev,re,r,rp,c)
+	local og=e:GetLabelObject()
+	if not og then return end
+	c:SetMaterial(og)
+	Duel.Overlay(c,og)
+end
+function OTNN.RankValue(e,c)
+	return c:GetOverlayCount()+1
+end
+function OTNN.BattleGainAtkOperation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_UPDATE_ATTACK)
+	e1:SetValue(500*c:GetRank())
+	e1:SetReset(RESET_EVENT|RESETS_STANDARD|RESET_PHASE|PHASE_DAMAGE)
+	c:RegisterEffect(e1)
+end
+function OTNN.AttachCondition(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local bc=c:GetBattleTarget()
+	return c:IsRelateToBattle() and bc:IsReason(REASON_BATTLE) and bc:IsMonster()
+end
+function OTNN.AttachOperation(extraeff)
+	return function(e,tp,eg,ep,ev,re,r,rp)
+		local c=e:GetHandler()
+		local bc=c:GetBattleTarget()
+		if c:IsRelateToBattle() and bc:IsLocation(LOCATION_GRAVE) and bc:IsReason(REASON_BATTLE) and bc:IsMonster() then
+			Duel.Overlay(c,bc)
+		end
+		local og=c:GetOverlayGroup()
+		for tc in aux.Next(og) do
+			if tc:GetOwner()~=tp then
+				if extraeff then extraeff(c) end
+			end
+		end
+	end
+end
