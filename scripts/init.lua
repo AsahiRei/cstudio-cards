@@ -344,7 +344,9 @@ function DateALive.InverseSpiritReplaceOperation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
+--gonna be the twin tail
 if not OTNN then OTNN = {} end
+SET_OTNN=0x1192
 
 function OTNN.XyzProcedure(c,id,extraeff)
 	--xyz summon
@@ -415,6 +417,7 @@ end
 function OTNN.XyzOperation(e,tp,eg,ep,ev,re,r,rp,c)
 	local og=e:GetLabelObject()
 	if not og then return end
+	Duel.HintSelection(og)
 	c:SetMaterial(og)
 	Duel.Overlay(c,og)
 end
